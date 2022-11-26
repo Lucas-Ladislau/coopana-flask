@@ -1,0 +1,35 @@
+version: '2'
+
+services:
+    db:
+      image: postgres
+      # somente para debugger
+      ports:
+          - "5432:5432"
+      volumes:
+        - db_data:/var/lib/mysql
+      restart: always
+      environment:
+          POSTGRES_PASSWORD: 1234567890
+          POSTGRES_USER: Coopana
+          POSTGRES_DB: Coopana
+    app:
+      image: metabase/metabase
+      ports:
+        - "3000:3000"
+      restart: always
+      environment:
+        MB_DB_TYPE: postgres
+        MB_DB_DBNAME: Coopana
+        MB_DB_PORT: 5432
+        MB_DB_USER: Coopana
+        MB_DB_PASS: 1234567890
+        MB_DB_HOST: db
+    
+    adminer:
+      image: adminer
+      restart: always
+      ports:
+        - 8080:8080
+volumes:
+    db_data:
