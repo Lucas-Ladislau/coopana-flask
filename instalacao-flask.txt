@@ -1,0 +1,21 @@
+Após o download do projeto executar no terminal do vsCode
+ 	py -m venv venv
+-> esse comando criará o ambiente virtual do flask
+
+Agora é necessário ativar o ambiente virtual, para isso no windows você
+precisa habilitar a execução de scripts, siga o tutorial do link:
+https://answers.microsoft.com/pt-br/windows/forum/all/permitir-a-execu%C3%A7%C3%A3o-de-scripts-no/f6b195cf-0be7-46e2-b88c-358c79f78343
+
+Agora é só ativar o ambiente virtual com o seguinte comando no vscode:
+
+	./venv/Scripts/Activate.ps1
+->Dica: .ps1 é devido ao terminal está no windows power shell
+
+em seguida digite no termina:
+	pip install flask
+
+agora execute o comando para inicializar as varáveis de ambiente do flask:
+	pip install python-dotenv
+
+finalmente agora é só executar:
+	flask run
