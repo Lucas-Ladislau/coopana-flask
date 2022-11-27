@@ -26,4 +26,4 @@ def veiculos():
 def cooperados():
     return render_template('cooperados.html')
 
-
+app.run()
