@@ -6,7 +6,7 @@ import psycopg2.extras
 DB_HOST = 'localhost'
 DB_NAME = 'coopana' #nome do BD
 DB_USER = 'postgres'  #nome user do seu BD      
-DB_PASS = '31081995'   #senha do seu BD     
+DB_PASS = '123456789'   #senha do seu BD     
 
 conn = psycopg2.connect(dbname=DB_NAME, user=DB_USER, password=DB_PASS, host=DB_HOST)
 
