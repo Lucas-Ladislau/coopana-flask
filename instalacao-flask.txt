@@ -17,5 +17,10 @@ em seguida digite no termina:
 agora execute o comando para inicializar as varáveis de ambiente do flask:
 	pip install python-dotenv
 
+instalar o arquivo de compatibilidade com o postgres:
+	pip install psycopg2
+
+OBS.:antes de inicialzar o flask verifique as credenciais do BD, se o nome
+usuário e senha estão condizentes com o seu BD.
 finalmente agora é só executar:
 	flask run
