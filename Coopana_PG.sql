@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS coopana.cooperado (
     );
 
 
-CREATE TABLE IF NOT EXISTS coopana.licitação (
+CREATE TABLE IF NOT EXISTS coopana.licitacao (
     id SERIAL NOT NULL,
     financiador VARCHAR(255) NOT NULL,
     licitacao_destino VARCHAR(255) NOT NULL,
@@ -63,12 +63,12 @@ CREATE TABLE IF NOT EXISTS coopana.preco_tabelado (
     unidade FLOAT NULL,
     valor FLOAT NULL,  --REVISAR ESSE ATRIBUTO
     projeto INT NOT NULL,
-    licitação INT NOT NULL,
+    licitacao INT NOT NULL,
     CONSTRAINT pk_preco_tabelado_id PRIMARY KEY (id),
     CONSTRAINT fk_produto_id FOREIGN KEY (produto)
     REFERENCES coopana.produto (id),
-    CONSTRAINT fk_licitacao_id FOREIGN KEY (licitação)
-    REFERENCES coopana.licitação (id),
+    CONSTRAINT fk_licitacao_id FOREIGN KEY (licitacao)
+    REFERENCES coopana.licitacao (id),
     CONSTRAINT fk_projeto_id FOREIGN KEY (projeto)
     REFERENCES coopana.projeto (id)
     );
@@ -79,10 +79,10 @@ CREATE TABLE IF NOT EXISTS coopana.reparticao_projeto (
     cooperado INT NOT NULL,
     disponivel FLOAT NULL,
     entregue FLOAT NULL,
-    licitação INT NOT NULL,
+    licitacao INT NOT NULL,
     CONSTRAINT pk_reparticao_projeto_id PRIMARY KEY (id),
-    CONSTRAINT fk_licitacao FOREIGN KEY (licitação)
-    REFERENCES coopana.licitação (id),
+    CONSTRAINT fk_licitacao FOREIGN KEY (licitacao)
+    REFERENCES coopana.licitacao (id),
     CONSTRAINT fk_cooperado FOREIGN KEY (cooperado)
     REFERENCES coopana.cooperado (id)
     );
