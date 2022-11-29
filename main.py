@@ -4,9 +4,9 @@ import psycopg2.extras
 
 # User e pass definidos no postgree 
 DB_HOST = 'localhost'
-DB_NAME = 'postgres'
-DB_USER = 'postgres'        
-DB_PASS = '1234567890'      
+DB_NAME = 'coopana' #nome do BD
+DB_USER = 'postgres'  #nome user do seu BD      
+DB_PASS = '31081995'   #senha do seu BD     
 
 conn = psycopg2.connect(dbname=DB_NAME, user=DB_USER, password=DB_PASS, host=DB_HOST)
 
@@ -15,36 +15,32 @@ app.secret_key = "coopana"
 
 @app.route("/")
 def main():
-    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-    s = "SELECT * FROM coopana.licitação"       # Nome da tabela do bd que vai ser utilizada
-    cur.execute(s)
-    list_users = cur.fetchall()
-    return render_template('index.html', list_users = list_users)
+    return render_template('index.html')
 
-@app.route('/add_licitação', methods=['POST'])
-def add_licitação():    
+@app.route('/add_licitacao', methods=['POST'])
+def add_licitacao():    
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
     if request.method == 'POST':
         #Colunas da respectiva tabela
         financiador = request.form['financiador']           
         licitacao_destino = request.form['licitacao_destino']
-        cur.execute("INSERT INTO coopana.licitação (financiador, licitacao_destino) VALUES (%s,%s)", (financiador, licitacao_destino))
+        cur.execute("INSERT INTO coopana.licitacao (financiador, licitacao_destino) VALUES (%s,%s)", (financiador, licitacao_destino))
         conn.commit()
         flash('Licitação adicionada com Sucesso!')
-        return redirect(url_for('main'))        #retorna pra main onde vai monstrar a tabela depois de dar INSERT 
+        return redirect(url_for('licitacoes'))        #retorna pra main onde vai monstrar a tabela depois de dar INSERT 
         
 @app.route('/edit/<id>', methods = ['POST', 'GET'])
 def get_employee(id):    
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
     
-    cur.execute('SELECT * FROM coopana.licitação WHERE id = %s', (id))
+    cur.execute('SELECT * FROM coopana.licitacao WHERE id = %s', (id))
     data = cur.fetchall()
     cur.close()
     print(data[0])
-    return render_template('edit.html', licitação = data[0])
+    return render_template('edit.html', licitacao = data[0])
 
 @app.route('/update/<id>', methods = ['POST'])
-def update_licitação(id):
+def update_licitacao(id):
     if request.method == 'POST':
         #Colunas da respectiva tabela
         financiador = request.form['financiador']           
@@ -52,23 +48,23 @@ def update_licitação(id):
         
         cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
         cur.execute("""
-            UPDATE coopana.licitação
+            UPDATE coopana.licitacao
             SET financiador = %s,
                 licitacao_destino = %s
             WHERE id = %s           
         """, (financiador, licitacao_destino, id))
         flash('Licitação Atualizada com sucesso !')
         conn.commit()
-        return redirect(url_for('main'))   
+        return redirect(url_for('licitacoes'))   
         
 @app.route('/delete/<string:id>', methods = ['POST','GET'])
-def delete_licitação(id):
+def delete_licitacao(id):
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
    
-    cur.execute('DELETE FROM coopana.licitação WHERE id = {0}'.format(id))
+    cur.execute('DELETE FROM coopana.licitacao WHERE id = {0}'.format(id))
     conn.commit()
     flash('Licitação Removida com sucesso!')
-    return redirect(url_for('main'))
+    return redirect(url_for('licitacoes'))
         
 @app.route("/funcionario")
 def funcionario():
@@ -78,9 +74,13 @@ def funcionario():
 def projeto():
     return render_template('projetos.html')
 
-@app.route("/licitacao")
-def licitacao():
-    return render_template('licitacoes.html')
+@app.route("/licitacoes")
+def licitacoes():
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    s = "SELECT * FROM coopana.licitacao"       # Nome da tabela do bd que vai ser utilizada
+    cur.execute(s)
+    list_users = cur.fetchall()
+    return render_template('licitacoes.html', list_users = list_users)
 
 @app.route("/veiculos")
 def veiculos():
