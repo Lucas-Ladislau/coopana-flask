@@ -9,17 +9,16 @@ CREATE TABLE IF NOT EXISTS coopana.produto(
 CREATE TABLE IF NOT EXISTS coopana.cultura(
     id SERIAL NOT NULL,
     produto INT NOT NULL,
-    tipo VARCHAR(100),
     valor FLOAT,
     quantidade FLOAT,
     CONSTRAINT pk_cultura_id PRIMARY KEY (id),
     CONSTRAINT fk_cultura_produto FOREIGN KEY (produto)
-    REFERENCES coopana.produto (id)
+        REFERENCES coopana.produto (id)
     );
 
--------------------------------------------------------
---Definir melhor o endereço para propriedades agrícolas
--------------------------------------------------------
+-- -------------------------------------------------------
+-- Definir melhor o endereço para propriedades agrícolas
+-- -------------------------------------------------------
 CREATE TABLE IF NOT EXISTS coopana.endereco (
     id SERIAL NOT NULL,
     cidade VARCHAR(150) NOT NULL,
@@ -33,27 +32,29 @@ CREATE TABLE IF NOT EXISTS coopana.cooperado (
     nome VARCHAR(255) NOT NULL,
     celular VARCHAR(20) NULL,
     cultura INT NOT NULL,
-    endereço INT NOT NULL,
+    endereco INT NOT NULL,
     CONSTRAINT pk_cooperado_id PRIMARY KEY (id),
     CONSTRAINT fk_cultura_id FOREIGN KEY (cultura)
-    REFERENCES coopana.cultura (id),
+        REFERENCES coopana.cultura (id),
     CONSTRAINT fk_endereco_id FOREIGN KEY (endereco)
-    REFERENCES coopana.endereco (id)
+        REFERENCES coopana.endereco (id)
     );
+
+CREATE TABLE IF NOT EXISTS coopana.projeto (
+   id SERIAL NOT NULL,
+   nome VARCHAR(255) NOT NULL,
+   sigla VARCHAR(15) NULL,
+   CONSTRAINT pk_projeto_id PRIMARY KEY (id)
+);
 
 
 CREATE TABLE IF NOT EXISTS coopana.licitacao (
     id SERIAL NOT NULL,
-    financiador VARCHAR(255) NOT NULL,
+    projeto INT NOT NULL,
     licitacao_destino VARCHAR(255) NOT NULL,
-    CONSTRAINT pk_licitacao_id PRIMARY KEY (id)
-    );
-
-CREATE TABLE IF NOT EXISTS coopana.projeto (
-    id SERIAL NOT NULL,
-    nome VARCHAR(255) NOT NULL,
-    sigla VARCHAR(15) NULL,
-    CONSTRAINT pk_projeto_id PRIMARY KEY (id)
+    CONSTRAINT pk_licitacao_id PRIMARY KEY (id),
+    CONSTRAINT fk_projeto_id FOREIGN KEY (projeto)
+    REFERENCES coopana.projeto (id)
     );
 
 
@@ -61,21 +62,17 @@ CREATE TABLE IF NOT EXISTS coopana.preco_tabelado (
     id SERIAL NOT NULL,
     produto INT NOT NULL,
     unidade FLOAT NULL,
-    valor FLOAT NULL,  --REVISAR ESSE ATRIBUTO
-    projeto INT NOT NULL,
+    valor FLOAT NULL,
     licitacao INT NOT NULL,
     CONSTRAINT pk_preco_tabelado_id PRIMARY KEY (id),
     CONSTRAINT fk_produto_id FOREIGN KEY (produto)
     REFERENCES coopana.produto (id),
     CONSTRAINT fk_licitacao_id FOREIGN KEY (licitacao)
-    REFERENCES coopana.licitacao (id),
-    CONSTRAINT fk_projeto_id FOREIGN KEY (projeto)
-    REFERENCES coopana.projeto (id)
+    REFERENCES coopana.licitacao (id)
     );
 
 CREATE TABLE IF NOT EXISTS coopana.reparticao_projeto (
     id SERIAL NOT NULL,
-    cpf VARCHAR(14) NOT NULL,
     cooperado INT NOT NULL,
     disponivel FLOAT NULL,
     entregue FLOAT NULL,
@@ -106,17 +103,15 @@ CREATE TABLE IF NOT EXISTS coopana.relatorio_entregas (
 
 
 
-----------------TABELAS PARA CONTROLE DE VEICULOS--------------------
+-- --------------TABELAS PARA CONTROLE DE VEICULOS---------------
 
 CREATE TABLE IF NOT EXISTS coopana.veiculos (
     id SERIAL NOT NULL,
     tipo VARCHAR(150) NOT NULL,
-    nome VARCHAR(100) NOT NULL,
     placa VARCHAR(40) NOT NULL,
     marca VARCHAR(60),
     situação VARCHAR(255),
     ano INT,
-    valor FLOAT,
     CONSTRAINT pk_veiculos_id PRIMARY KEY (id));
 
 
@@ -126,9 +121,12 @@ CREATE TABLE IF NOT EXISTS coopana.funcionarios (
     nome VARCHAR(255) NOT NULL,
     cpf VARCHAR(14) NOT NULL,
     telefone VARCHAR(45) NOT NULL,
+    endereco INT NOT NULL,
     sexo VARCHAR(15),
     cargo VARCHAR(60),
-    CONSTRAINT pk_funcionarios_id PRIMARY KEY (id)
+    CONSTRAINT pk_funcionarios_id PRIMARY KEY (id),
+    CONSTRAINT fk_endereco_id FOREIGN KEY (endereco)
+        REFERENCES coopana.endereco (id)
     );
 
 CREATE TABLE IF NOT EXISTS coopana.transporte (
