@@ -1,12 +1,19 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 import psycopg2
 import psycopg2.extras
+import os
 
 # User e pass definidos no postgree 
 DB_HOST = 'localhost'
 DB_NAME = 'coopana' #nome do BD
 DB_USER = 'postgres'  #nome user do seu BD      
-DB_PASS = '123456789'   #senha do seu BD     
+DB_PASS = '123456789'   #senha do seu BD   
+
+#Versão de conexão docker  
+#DB_HOST = os.environ['DB_HOST']
+#DB_NAME = os.environ['DB_DBNAME']
+#DB_USER = os.environ['DB_USER']
+#DB_PASS = os.environ['DB_PASS']
 
 conn = psycopg2.connect(dbname=DB_NAME, user=DB_USER, password=DB_PASS, host=DB_HOST)
 
@@ -90,4 +97,6 @@ def veiculos():
 def cooperados():
     return render_template('cooperados.html')
 
-app.run()
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0')
