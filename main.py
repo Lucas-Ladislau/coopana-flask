@@ -7,7 +7,7 @@ import os
 DB_HOST = 'localhost'
 DB_NAME = 'coopana' #nome do BD
 DB_USER = 'postgres'  #nome user do seu BD      
-DB_PASS = '123456789'   #senha do seu BD   
+DB_PASS = '31081995'   #senha do seu BD   
 
 #Versão de conexão docker  
 #DB_HOST = os.environ['DB_HOST']
@@ -92,26 +92,25 @@ def licitacoes():
 @app.route("/veiculos")
 def veiculos():
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-    v = "SELECT * FROM coopana.veiculos"       # Nome da tabela do bd que vai ser utilizada
+    v = "SELECT * FROM coopana.veiculos"       # Nome da tabela do bd que vai ser utililorzada
     cur.execute(v)
     list_veiculos = cur.fetchall()
     return render_template('veiculos.html',list_veiculos = list_veiculos)
 
+#a implementação de situação é feita na regra de negócio em transporte
 @app.route('/add_veiculos', methods=['POST'])         
 def add_veiculos():
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
     if request.method == 'POST':
         #Colunas da respectiva tabela
         tipo = request.form['tipo']           
-        nome = request.form['nome']
         placa = request.form['placa']
         marca = request.form['marca']
-        situacao = request.form['situacao']
+        situacao = False
         ano = request.form['ano']
-        valor = request.form['valor']
         cur.execute(
-            "INSERT INTO coopana.veiculos (tipo,nome,placa,marca,situação,ano,valor) VALUES (%s,%s,%s,%s,%s,%s,%s)", 
-            (tipo,nome,placa,marca,situacao,ano,valor))
+            "INSERT INTO coopana.veiculos (tipo,placa,marca,situacao,ano) VALUES (%s,%s,%s, %s,%s)", 
+            (tipo,placa,marca,situacao,ano))
         conn.commit()
         flash('Veiculo adicionado com Sucesso!')
         return redirect(url_for('veiculos')) 
@@ -131,19 +130,16 @@ def update_veiculos(id):
     if request.method == 'POST':
         #Colunas da respectiva tabela
         tipo = request.form['tipo']           
-        nome = request.form['nome']
         placa = request.form['placa']
         marca = request.form['marca']
-        situacao = request.form['situacao']
         ano = request.form['ano']
-        valor = request.form['valor']
         
         cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
         cur.execute("""
             UPDATE coopana.veiculos
-            SET tipo = %s,nome = %s,placa = %s, marca = %s,situação = %s,ano = %s,valor = %s
+            SET tipo = %s,placa = %s, marca = %s,ano = %s
             WHERE id = %s 
-        """, (tipo,nome,placa,marca,situacao,ano,valor, id))
+        """, (tipo,placa,marca,ano, id))
         flash('Veiculo Atualizado com sucesso !')
         conn.commit()
         return redirect(url_for('veiculos'))   
