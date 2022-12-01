@@ -5,19 +5,19 @@ import psycopg2.extras
 import os
 
 # User e pass definidos no postgree 
-#DB_HOST = 'localhost'
-#DB_NAME = 'coopana' #nome do BD
-#DB_USER = 'postgres'  #nome user do seu BD      
-#DB_PASS = '31081995'   #senha do seu BD   
+DB_HOST = 'localhost'
+DB_NAME = 'coopana' #nome do BD
+DB_USER = 'postgres'  #nome user do seu BD      
+DB_PASS = '31081995'   #senha do seu BD   
 
 #Versão de conexão docker  
-DB_HOST = os.environ['DB_HOST']
-DB_NAME = os.environ['DB_DBNAME']
-DB_USER = os.environ['DB_USER']
-DB_PASS = os.environ['DB_PASS']
+# DB_HOST = os.environ['DB_HOST']
+# DB_NAME = os.environ['DB_DBNAME']
+# DB_USER = os.environ['DB_USER']
+# DB_PASS = os.environ['DB_PASS']
 
-print("Inicinado Banco...")
-sleep(20)
+# print("Inicinado Banco...")
+# sleep(20)
 
 conn = psycopg2.connect(dbname=DB_NAME, user=DB_USER, password=DB_PASS, host=DB_HOST)
 
@@ -27,6 +27,15 @@ app.secret_key = "coopana"
 @app.route("/")
 def main():
     return render_template('index.html')
+
+#-------------------LICITAÇÕES----------------
+@app.route("/licitacoes")
+def licitacoes():
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    s = "SELECT * FROM coopana.licitacao"       # Nome da tabela do bd que vai ser utilizada
+    cur.execute(s)
+    list_users = cur.fetchall()
+    return render_template('licitacoes.html', list_users = list_users)
 
 @app.route('/add_licitacao', methods=['POST'])
 def add_licitacao():    
@@ -76,25 +85,38 @@ def delete_licitacao(id):
     conn.commit()
     flash('Licitação Removida com sucesso!')
     return redirect(url_for('licitacoes'))
-
-@app.route("/licitacoes")
-def licitacoes():
-    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-    s = "SELECT * FROM coopana.licitacao"       # Nome da tabela do bd que vai ser utilizada
-    cur.execute(s)
-    list_users = cur.fetchall()
-    return render_template('licitacoes.html', list_users = list_users)
         
 @app.route("/funcionario")
 def funcionario():
     return render_template('funcionarios.html')
 
+#---------------------COOPERADOS------------------------------
 @app.route("/cooperados")
 def cooperados():
-    return render_template('cooperados.html')
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    v = "SELECT * FROM coopana.cooperado"     
+    cur.execute(v)
+    list_cooperados = cur.fetchall()
+    return render_template('cooperados.html',list_cooperados = list_cooperados)
+
+@app.route('/add_cooperado', methods=['POST'])
+def add_cooperado():    
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    if request.method == 'POST':
+        #Colunas da respectiva tabela
+        cpf = request.form['cpf']  
+        nome = request.form['nome']  
+        celular = request.form['celular']  
+        cultura = request.form['cultura']
+        endereco = request.form['endereco']        
+        cur.execute("""INSERT INTO coopana.cooperado (cpf,nome,celular,cultura,endereco) VALUES (%s,%s,%s,%s,%s)
+        """, (cpf,nome,celular,cultura,endereco))
+        conn.commit()
+        flash('cooperado adicionada com Sucesso!')
+        return redirect(url_for('cooperados'))
 
 
-#---------------------veiculos-----------------------------------
+#---------------------VEICULOS-----------------------------------
 @app.route("/veiculos")
 def veiculos():
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
@@ -217,6 +239,7 @@ def delete_projeto(id):
     flash('Projeto Removido com sucesso!')
     return redirect(url_for('projeto'))
 
+#============================================
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
