@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS coopana.produto(
 CREATE TABLE IF NOT EXISTS coopana.cultura(
     id SERIAL NOT NULL,
     produto INT NOT NULL,
-    valor FLOAT,
+    valor VARCHAR(14),
     quantidade FLOAT,
     CONSTRAINT pk_cultura_id PRIMARY KEY (id),
     CONSTRAINT fk_cultura_produto FOREIGN KEY (produto)
@@ -18,8 +18,9 @@ CREATE TABLE IF NOT EXISTS coopana.cultura(
 ----------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS coopana.endereco (
     id SERIAL NOT NULL,
+    estado VARCHAR(50) NOT NULL,
     cidade VARCHAR(150) NOT NULL,
-    bairro VARCHAR(100) NOT NULL,
+    rua VARCHAR(150) NOT NULL,
     CONSTRAINT pk_endereco_id PRIMARY KEY (id)
     );
 ----------------------------------------------------------------
@@ -57,7 +58,7 @@ CREATE TABLE IF NOT EXISTS coopana.preco_tabelado (
     id SERIAL NOT NULL,
     produto INT NOT NULL,
     unidade FLOAT NULL,
-    valor FLOAT NULL,
+    valor VARCHAR(20) NULL,
     licitacao INT NOT NULL,
     CONSTRAINT pk_preco_tabelado_id PRIMARY KEY (id),
     CONSTRAINT fk_produto_id FOREIGN KEY (produto)
