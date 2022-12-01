@@ -29,9 +29,9 @@ def add_licitacao():
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
     if request.method == 'POST':
         #Colunas da respectiva tabela
-        financiador = request.form['financiador']           
+        projeto = request.form['projeto']           
         licitacao_destino = request.form['licitacao_destino']
-        cur.execute("INSERT INTO coopana.licitacao (financiador, licitacao_destino) VALUES (%s,%s)", (financiador, licitacao_destino))
+        cur.execute("INSERT INTO coopana.licitacao (projeto, licitacao_destino) VALUES (%s,%s)", (projeto, licitacao_destino))
         conn.commit()
         flash('Licitação adicionada com Sucesso!')
         return redirect(url_for('licitacoes'))        #retorna pra main onde vai monstrar a tabela depois de dar INSERT 
@@ -50,16 +50,16 @@ def get_employee(id):
 def update_licitacao(id):
     if request.method == 'POST':
         #Colunas da respectiva tabela
-        financiador = request.form['financiador']           
+        projeto = request.form['projeto']           
         licitacao_destino = request.form['licitacao_destino']
         
         cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
         cur.execute("""
             UPDATE coopana.licitacao
-            SET financiador = %s,
+            SET projeto = %s,
                 licitacao_destino = %s
             WHERE id = %s           
-        """, (financiador, licitacao_destino, id))
+        """, (projeto, licitacao_destino, id))
         flash('Licitação Atualizada com sucesso !')
         conn.commit()
         return redirect(url_for('licitacoes'))   
