@@ -115,6 +115,44 @@ def add_cooperado():
         flash('cooperado adicionada com Sucesso!')
         return redirect(url_for('cooperados'))
 
+@app.route('/editc/<id>', methods = ['POST', 'GET'])  
+def get_cooperado(id):    
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    
+    cur.execute('SELECT * FROM coopana.cooperado WHERE id = %s', (id))
+    data = cur.fetchall()
+    cur.close()
+    print(data[0])
+    return render_template('editc.html', cooperados = data[0])
+
+@app.route('/updatec/<id>', methods = ['POST'])
+def update_cooperado(id):
+    if request.method == 'POST':
+        #Colunas da respectiva tabela
+        cpf = request.form['cpf']  
+        nome = request.form['nome']  
+        celular = request.form['celular']  
+        cultura = request.form['cultura']
+        endereco = request.form['endereco']
+        
+        cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        cur.execute("""
+            UPDATE coopana.cooperado
+            SET cpf = %s,nome = %s, celular = %s,cultura = %s,endereco = %s
+            WHERE id = %s 
+        """, (cpf,nome,celular,cultura,endereco, id))
+        flash('Veiculo Atualizado com sucesso !')
+        conn.commit()
+        return redirect(url_for('cooperados'))   
+
+@app.route('/deletec/<string:id>', methods = ['POST','GET'])
+def delete_cooperado(id):
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    cur.execute('DELETE FROM coopana.cooperado WHERE id = {0}'.format(id))
+    conn.commit()
+    flash('Cooperado Removido com sucesso!')
+    return redirect(url_for('cooperados'))
+
 
 #---------------------VEICULOS-----------------------------------
 @app.route("/veiculos")
@@ -144,7 +182,7 @@ def add_veiculos():
         return redirect(url_for('veiculos')) 
 
 @app.route('/editv/<id>', methods = ['POST', 'GET'])  
-def get_employe(id):    
+def get_veiculo(id):    
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
     
     cur.execute('SELECT * FROM coopana.veiculos WHERE id = %s', (id))
