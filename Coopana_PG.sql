@@ -110,7 +110,7 @@ CREATE TABLE IF NOT EXISTS coopana.veiculos (
     tipo VARCHAR(150) NOT NULL,
     placa VARCHAR(40) NOT NULL,
     marca VARCHAR(60),
-    situação VARCHAR(255),
+    situacao BOOLEAN,
     ano INT,
     CONSTRAINT pk_veiculos_id PRIMARY KEY (id));
 
