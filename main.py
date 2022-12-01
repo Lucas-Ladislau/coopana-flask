@@ -181,6 +181,74 @@ def delete_veiculos(id):
     return redirect(url_for('veiculos'))
 
 
+#----------------------FUNCIONÁRIOS-------------------------
+
+@app.route("/funcionarios")
+def funcionarios():
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    f = "SELECT * FROM coopana.funcionarios"       # Nome da tabela do bd que vai ser utililorzada
+    cur.execute(f)
+    list_funcionarios = cur.fetchall()
+    return render_template('funcionarios.html',list_funcionarios = list_funcionarios)
+
+#a implementação de situação é feita na regra de negócio em transporte
+@app.route('/add_funcionarios', methods=['POST'])         
+def add_funcionarios():
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    if request.method == 'POST':
+        #Colunas da respectiva tabela
+        nome = request.form['nome']           
+        cpf = request.form['cpf']
+        telefone = request.form['telefone']
+        endereco = request.form['endereco']
+        sexo = request.form['sexo']
+        cargo = request.form['cargo']
+        cur.execute(
+            "INSERT INTO coopana.funcionarios (nome,cpf,telefone,endereco,sexo,cargo) VALUES (%s,%s,%s,%s,%s,%s)", 
+            (nome,cpf,telefone,endereco,sexo,cargo))
+        conn.commit()
+        flash('Funcionário adicionado com Sucesso!')
+        return redirect(url_for('funcionarios')) 
+
+@app.route('/editf/<id>', methods = ['POST', 'GET'])  
+def get_funcionario(id):    
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    
+    cur.execute('SELECT * FROM coopana.funcionarios WHERE id = %s', (id))
+    data = cur.fetchall()
+    cur.close()
+    print(data[0])
+    return render_template('editf.html', funcionarios = data[0])
+
+@app.route('/updatef/<id>', methods = ['POST'])
+def update_funcionarios(id):
+    if request.method == 'POST':
+        #Colunas da respectiva tabela
+        nome = request.form['nome']           
+        cpf = request.form['cpf']
+        telefone = request.form['telefone']
+        endereco = request.form['endereco']
+        sexo = request.form['sexo']
+        cargo = request.form['cargo']
+        
+        cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        cur.execute("""
+            UPDATE coopana.funcionarios
+            SET nome = %s,cpf = %s, telefone = %s,endereco = %s,sexo = %s,cargo = %s
+            WHERE id = %s 
+        """, (nome,cpf,telefone,endereco,sexo,cargo, id))
+        flash('Funcionário Atualizado com sucesso !')
+        conn.commit()
+        return redirect(url_for('funcionarios'))   
+
+@app.route('/deletef/<string:id>', methods = ['POST','GET'])
+def delete_funcionarios(id):
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    cur.execute('DELETE FROM coopana.funcionarios WHERE id = {0}'.format(id))
+    conn.commit()
+    flash('Funcionário Removido com sucesso!')
+    return redirect(url_for('funcionarios'))
+
 #----------------------PROJETO------------------------------
 
 @app.route("/projeto")

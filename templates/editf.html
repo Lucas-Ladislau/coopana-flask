@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block body %}
+  <div class="row">
+    <div class="col-md-4 offset-md-4">
+      <div class="card card-body">
+        <form action="/updatef/{{funcionarios.id}}" method="POST">
+          <div class="form-group">
+            <input type="text" name="nome" value="{{funcionarios.nome}}" class="form-control">
+          </div>
+          <div class="form-group">
+            <input type="text" name="cpf" value="{{funcionarios.cpf}}" class="form-control">
+          </div>
+          <div class="form-group">
+            <input type="text" name="telefone" value="{{funcionarios.telefone}}" class="form-control">
+          </div>
+          <div class="form-group">
+            <input type="text" name="endereco" value="{{funcionarios.endereco}}" class="form-control">
+          </div>
+          <div class="form-group">
+            <input type="text" name="sexo" value="{{funcionarios.sexo}}" class="form-control">
+          </div>
+          <div class="form-group">
+            <input type="text" name="cargo" value="{{funcionarios.cargo}}" class="form-control">
+          </div>
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-block">
+              Atualizar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}
