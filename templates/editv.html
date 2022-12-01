@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block body %}
+  <div class="row">
+    <div class="col-md-4 offset-md-4">
+      <div class="card card-body">
+        <form action="/updatev/{{veiculos.id}}" method="POST">
+          <div class="form-group">
+            <input type="text" name="tipo" value="{{veiculos.tipo}}" class="form-control">
+          </div>
+          <div class="form-group">
+            <input type="text" name="nome" value="{{veiculos.nome}}" class="form-control">
+          </div>
+          <div class="form-group">
+            <input type="text" name="placa" value="{{veiculos.placa}}" class="form-control">
+          </div>
+          <div class="form-group">
+            <input type="text" name="marca" value="{{veiculos.marca}}" class="form-control">
+          </div>
+          <div class="form-group">
+            <input type="text" name="situacao" value="{{veiculos.situação}}" class="form-control">
+          </div>
+          <div class="form-group">
+            <input type="text" name="ano" value="{{veiculos.ano}}" class="form-control">
+          </div>
+          <div class="form-group">
+            <input type="text" name="valor" value="{{veiculos.valor}}" class="form-control">
+          </div>
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-block">
+              Atualizar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

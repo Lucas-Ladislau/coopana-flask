@@ -88,11 +88,74 @@ def licitacoes():
     cur.execute(s)
     list_users = cur.fetchall()
     return render_template('licitacoes.html', list_users = list_users)
-
+#---------------------veiculos-----------------------------------
 @app.route("/veiculos")
 def veiculos():
-    return render_template('veiculos.html')
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    v = "SELECT * FROM coopana.veiculos"       # Nome da tabela do bd que vai ser utilizada
+    cur.execute(v)
+    list_veiculos = cur.fetchall()
+    return render_template('veiculos.html',list_veiculos = list_veiculos)
 
+@app.route('/add_veiculos', methods=['POST'])         
+def add_veiculos():
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    if request.method == 'POST':
+        #Colunas da respectiva tabela
+        tipo = request.form['tipo']           
+        nome = request.form['nome']
+        placa = request.form['placa']
+        marca = request.form['marca']
+        situacao = request.form['situacao']
+        ano = request.form['ano']
+        valor = request.form['valor']
+        cur.execute(
+            "INSERT INTO coopana.veiculos (tipo,nome,placa,marca,situação,ano,valor) VALUES (%s,%s,%s,%s,%s,%s,%s)", 
+            (tipo,nome,placa,marca,situacao,ano,valor))
+        conn.commit()
+        flash('Veiculo adicionado com Sucesso!')
+        return redirect(url_for('veiculos')) 
+
+@app.route('/editv/<id>', methods = ['POST', 'GET'])  
+def get_employe(id):    
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    
+    cur.execute('SELECT * FROM coopana.veiculos WHERE id = %s', (id))
+    data = cur.fetchall()
+    cur.close()
+    print(data[0])
+    return render_template('editv.html', veiculos = data[0])
+
+@app.route('/updatev/<id>', methods = ['POST'])
+def update_veiculos(id):
+    if request.method == 'POST':
+        #Colunas da respectiva tabela
+        tipo = request.form['tipo']           
+        nome = request.form['nome']
+        placa = request.form['placa']
+        marca = request.form['marca']
+        situacao = request.form['situacao']
+        ano = request.form['ano']
+        valor = request.form['valor']
+        
+        cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        cur.execute("""
+            UPDATE coopana.veiculos
+            SET tipo = %s,nome = %s,placa = %s, marca = %s,situação = %s,ano = %s,valor = %s
+            WHERE id = %s 
+        """, (tipo,nome,placa,marca,situacao,ano,valor, id))
+        flash('Veiculo Atualizado com sucesso !')
+        conn.commit()
+        return redirect(url_for('veiculos'))   
+
+@app.route('/deletev/<string:id>', methods = ['POST','GET'])
+def delete_veiculos(id):
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    cur.execute('DELETE FROM coopana.veiculos WHERE id = {0}'.format(id))
+    conn.commit()
+    flash('Veiculo Removido com sucesso!')
+    return redirect(url_for('veiculos'))
+#------------------------------------------------------------------
 @app.route("/cooperados")
 def cooperados():
     return render_template('cooperados.html')
