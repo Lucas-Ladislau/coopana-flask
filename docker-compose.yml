@@ -1,6 +1,18 @@
 version: '2'
 
 services:
+    app:
+      build: ./
+      depends_on:
+      - db
+      ports:
+        - 80:5000
+      restart: always
+      environment:
+        DB_DBNAME: Coopana
+        DB_USER: Coopana
+        DB_PASS: 1234567890
+        DB_HOST: db
     db:
       image: postgres
       # somente para debugger
@@ -32,16 +44,6 @@ services:
       ports:
         - 8080:8080
     
-    app:
-      build: ./
-      ports:
-        - 80:80
-      restart: always
-      environment:
-        DB_DBNAME: Coopana
-        DB_USER: Coopana
-        DB_PASS: 1234567890
-        DB_HOST: db
 
     
 volumes:
