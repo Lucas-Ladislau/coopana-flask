@@ -72,14 +72,6 @@ def delete_licitacao(id):
     conn.commit()
     flash('Licitação Removida com sucesso!')
     return redirect(url_for('licitacoes'))
-        
-@app.route("/funcionario")
-def funcionario():
-    return render_template('funcionarios.html')
-
-@app.route("/projeto")
-def projeto():
-    return render_template('projetos.html')
 
 @app.route("/licitacoes")
 def licitacoes():
@@ -88,6 +80,16 @@ def licitacoes():
     cur.execute(s)
     list_users = cur.fetchall()
     return render_template('licitacoes.html', list_users = list_users)
+        
+@app.route("/funcionario")
+def funcionario():
+    return render_template('funcionarios.html')
+
+@app.route("/cooperados")
+def cooperados():
+    return render_template('cooperados.html')
+
+
 #---------------------veiculos-----------------------------------
 @app.route("/veiculos")
 def veiculos():
@@ -151,10 +153,65 @@ def delete_veiculos(id):
     conn.commit()
     flash('Veiculo Removido com sucesso!')
     return redirect(url_for('veiculos'))
-#------------------------------------------------------------------
-@app.route("/cooperados")
-def cooperados():
-    return render_template('cooperados.html')
+
+
+#----------------------PROJETO------------------------------
+
+@app.route("/projeto")
+def projeto():
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    v = "SELECT * FROM coopana.projeto"       # Nome da tabela do bd que vai ser utililorzada
+    cur.execute(v)
+    list_projetos = cur.fetchall()
+    return render_template('projetos.html',list_projetos = list_projetos)
+
+@app.route('/add_projetos', methods=['POST'])         
+def add_projetos():
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    if request.method == 'POST':
+        #Colunas da respectiva tabela
+        nome = request.form['nome']           
+        sigla = request.form['sigla']
+        cur.execute(
+            "INSERT INTO coopana.projeto (nome,sigla) VALUES (%s,%s)", 
+            (nome, sigla))
+        conn.commit()
+        flash('Projeto adicionado com Sucesso!')
+        return redirect(url_for('projeto'))
+
+@app.route('/editp/<id>', methods = ['POST', 'GET'])  
+def get_projetoID(id):    
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    
+    cur.execute('SELECT * FROM coopana.projeto WHERE id = %s', (id))
+    data = cur.fetchall()
+    cur.close()
+    print(data[0])
+    return render_template('editp.html', projeto = data[0])
+
+@app.route('/updatep/<id>', methods = ['POST'])
+def update_projeto(id):
+    if request.method == 'POST':
+        #Colunas da respectiva tabela
+        nome = request.form['nome']           
+        sigla = request.form['sigla']
+        
+        cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        cur.execute("""
+            UPDATE coopana.projeto
+            SET nome = %s,sigla = %s WHERE id = %s 
+        """, (nome,sigla,  id))
+        flash('Projeto Atualizado com sucesso !')
+        conn.commit()
+        return redirect(url_for('projeto'))
+
+@app.route('/deletep/<string:id>', methods = ['POST','GET'])
+def delete_projeto(id):
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    cur.execute('DELETE FROM coopana.projeto WHERE id = {0}'.format(id))
+    conn.commit()
+    flash('Projeto Removido com sucesso!')
+    return redirect(url_for('projeto'))
 
 
 if __name__ == '__main__':

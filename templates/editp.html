@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block body %}
+  <div class="row">
+    <div class="col-md-4 offset-md-4">
+      <div class="card card-body">
+        <form action="/updatep/{{projeto.id}}" method="POST">
+          <div class="form-group">
+            <input type="text" name="nome" value="{{projeto.nome}}" class="form-control">
+          </div>
+          <div class="form-group">
+            <input type="text" name="sigla" value="{{projeto.sigla}}" class="form-control">
+          </div>
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-block">
+              Atualizar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}
