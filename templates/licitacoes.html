@@ -20,13 +20,13 @@
 	  <div class="card card-body">
 		<form action="{{url_for('add_licitacao')}}" method="POST">
 		  <div class="form-group">
-			<input type="text" class="form-control" name="projeto" placeholder="projeto">
+			<input type="text" class="form-control" name="projeto" placeholder="Projeto">
 		  </div>
 		  <div class="form-group">
-			<input type="text" class="form-control" name="licitacao_destino" placeholder="Licitação Destino">
+			<input type="text" class="form-control" name="licitacao_destino" placeholder="Licitação destino">
 		  </div>
 		  <button class="btn btn-primary btn-block">
-			salvar 
+			Salvar 
 		  </button>
 		</form>
 	  </div>
@@ -36,9 +36,9 @@
 		<thead>
 			<tr>
 			<td>ID</td>
-			<td>projeto</td>
-			<td>Licitação destino</td>
-			<td>Action</td>
+			<td>Projeto</td>
+			<td>Licitação Destino</td>
+			<td>Ação</td>
 			</tr>
 		</thead>
 		<tbody>
@@ -48,8 +48,8 @@
 			<td>{{row[1]}}</td>
 			<td>{{row[2]}}</td>
 			<td width="200">
-				<a href="/edit/{{row[0]}}" class="btn btn-secondary btn-sm">editar</a>
-				<a href="/delete/{{row[0]}}" class="btn btn-danger btn-delete btn-sm">apagar</a>
+				<a href="/edit/{{row[0]}}" class="btn btn-secondary btn-sm">Editar</a>
+				<a href="/delete/{{row[0]}}" class="btn btn-danger btn-delete btn-sm">Apagar</a>
 			</td>
 			</tr>
 			{% endfor %}
